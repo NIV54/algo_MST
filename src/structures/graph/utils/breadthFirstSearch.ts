@@ -21,9 +21,9 @@ const breadthFirstSearchInner = <T>(
     console.log(node.data);
 
     node.adjacent.forEach(item => {
-      if (!visited.has(item.data)) {
-        visited.set(item.data, true);
-        queue.enqueue(item);
+      if (!visited.has(item.node.data)) {
+        visited.set(item.node.data, true);
+        queue.enqueue(item.node);
       }
     });
   }

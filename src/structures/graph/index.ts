@@ -39,11 +39,11 @@ export class DirectedGraph<T> {
     return nodeToRemove;
   };
 
-  addEdge = (source: T, destination: T): void => {
+  addEdge = (source: T, destination: T, weight: number = 0): void => {
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
 
-    sourceNode.addAdjacent(destinationNode);
+    sourceNode.addAdjacent(destinationNode, weight);
   };
 
   removeEdge = (source: T, destination: T): void => {

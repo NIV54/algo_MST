@@ -10,8 +10,8 @@ const depthFirstSearchInner = <T>(node: GraphNode<T>, visited: Map<T, boolean>):
   console.log(node.data);
 
   node.adjacent.forEach(item => {
-    if (!visited.has(item.data)) {
-      depthFirstSearchInner(item, visited);
+    if (!visited.has(item.node.data)) {
+      depthFirstSearchInner(item.node, visited);
     }
   });
 };
