@@ -1,3 +1,5 @@
+import { defaultComparator } from "./common";
+
 import type { Comparator } from "./types";
 
 export class GraphNode<T> {
@@ -5,7 +7,7 @@ export class GraphNode<T> {
   adjacent: GraphNode<T>[];
   comparator: Comparator<T>;
 
-  constructor(data: T, comparator: Comparator<T>) {
+  constructor(data: T, comparator: Comparator<T> = defaultComparator) {
     this.data = data;
     this.adjacent = [];
     this.comparator = comparator;
@@ -23,5 +25,10 @@ export class GraphNode<T> {
     }
 
     return null;
+  };
+
+  toString = () => {
+    const adjacentString = this.adjacent.map(node => node.data).join(", ");
+    return `${this.data}: ${adjacentString}`;
   };
 }

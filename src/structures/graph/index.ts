@@ -1,12 +1,13 @@
+import { defaultComparator } from "./common";
 import { GraphNode } from "./graph-node";
 
 import type { Comparator, GraphNodes } from "./types";
 
-export class Graph<T> {
+export class DirectedGraph<T> {
   nodes: GraphNodes<T> = new Map();
   comparator: Comparator<T>;
 
-  constructor(comparator: Comparator<T>) {
+  constructor(comparator: Comparator<T> = defaultComparator) {
     this.comparator = comparator;
   }
 
@@ -53,4 +54,14 @@ export class Graph<T> {
       sourceNode.removeAdjacent(destination);
     }
   };
+
+  toString() {
+    let result = ``;
+
+    this.nodes.forEach(node => {
+      result += node.toString() + "\n";
+    });
+
+    return result;
+  }
 }
