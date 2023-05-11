@@ -1,5 +1,4 @@
 import { defaultComparator } from "./common";
-
 import type { Comparator, Edge } from "./types";
 
 export class GraphNode<T> {
@@ -7,13 +6,15 @@ export class GraphNode<T> {
   adjacent: Edge<T>[];
   comparator: Comparator<T>;
 
+  [prop: string]: any;
+
   constructor(data: T, comparator: Comparator<T> = defaultComparator) {
     this.data = data;
     this.adjacent = [];
     this.comparator = comparator;
   }
 
-  addAdjacent = (node: GraphNode<T>, weight: number = 0) => {
+  addAdjacent = (node: GraphNode<T>, weight = 0) => {
     this.adjacent.push({ node, weight });
   };
 
@@ -25,6 +26,10 @@ export class GraphNode<T> {
     }
 
     return null;
+  };
+
+  upsertProp = (key: string, value: unknown) => {
+    this[key] = value;
   };
 
   toString = () => {
