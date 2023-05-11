@@ -37,6 +37,7 @@ export class MinimumHeap<T> {
   };
 
   remove = () => {
+    const returnValue = this.getMin();
     this.heap[0] = this.heap[this.heap.length - 1];
     this.heap.splice(this.heap.length - 1, 1);
 
@@ -48,7 +49,7 @@ export class MinimumHeap<T> {
     do {
       // no children
       if (!left && !right) {
-        return;
+        break;
       }
 
       // 1 child
@@ -77,7 +78,11 @@ export class MinimumHeap<T> {
       right &&
       (this.biggerThen(this.heap[parent], left) || this.biggerThen(this.heap[parent], right))
     );
+
+    return returnValue;
   };
+
+  size = () => this.heap.length;
 
   private swapIndex = (a, b) => {
     [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
