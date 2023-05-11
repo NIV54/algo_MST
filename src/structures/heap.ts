@@ -21,8 +21,8 @@ export class MinimumHeap<T> {
     return this.heap[0];
   };
 
-  insert = (x: T) => {
-    this.heap.push(x);
+  insert = (item: T) => {
+    this.heap.push(item);
     if (this.heap.length >= 1) {
       let currentIndex = this.heap.length - 1;
 
@@ -83,6 +83,8 @@ export class MinimumHeap<T> {
   };
 
   size = () => this.heap.length;
+
+  exists = (item: T) => !!this.heap.find(heapItem => heapItem === item);
 
   private swapIndex = (a, b) => {
     [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
