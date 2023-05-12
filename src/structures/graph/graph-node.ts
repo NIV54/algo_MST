@@ -6,7 +6,7 @@ import type { Edge } from "./graph.types";
 export class GraphNode<T> {
   data: T;
   adjacent: Edge<T>[];
-  comparator: OrdComparator<T>;
+  private comparator: OrdComparator<T>;
 
   [prop: string]: any;
 

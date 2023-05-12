@@ -1,5 +1,5 @@
 import { GraphNode } from "../graph-node";
-import type { GraphNodes } from "../graph.types";
+import type { GraphNodeMap } from "../graph.types";
 
 const depthFirstSearchInner = <T>(node: GraphNode<T>, visited: Map<T, boolean>): void => {
   if (!node) return;
@@ -15,7 +15,7 @@ const depthFirstSearchInner = <T>(node: GraphNode<T>, visited: Map<T, boolean>):
   });
 };
 
-export const depthFirstSearch = <T>(nodes: GraphNodes<T>) => {
+export const depthFirstSearch = <T>(nodes: GraphNodeMap<T>) => {
   const visited: Map<T, boolean> = new Map();
   nodes.forEach(node => {
     if (!visited.has(node.data)) {

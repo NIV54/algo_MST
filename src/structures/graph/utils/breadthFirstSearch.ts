@@ -1,6 +1,6 @@
 import { Queue } from "../../queue";
 import { GraphNode } from "../graph-node";
-import type { GraphNodes } from "../graph.types";
+import type { GraphNodeMap } from "../graph.types";
 
 const breadthFirstSearchInner = <T>(
   node: GraphNode<T> | undefined,
@@ -29,7 +29,7 @@ const breadthFirstSearchInner = <T>(
   }
 };
 
-export const breadthFirstSearch = <T>(nodes: GraphNodes<T>) => {
+export const breadthFirstSearch = <T>(nodes: GraphNodeMap<T>) => {
   const visited: Map<T, boolean> = new Map();
   nodes.forEach(node => {
     if (!visited.has(node.data)) {

@@ -2,11 +2,11 @@ import type { OrdComparator } from "../common.types";
 
 import { defaultComparator } from "./common";
 import { GraphNode } from "./graph-node";
-import type { GraphNodes } from "./graph.types";
+import type { GraphNodeMap } from "./graph.types";
 
 export class DirectedGraph<T> {
-  nodes: GraphNodes<T> = new Map();
-  comparator: OrdComparator<T>;
+  nodes: GraphNodeMap<T> = new Map();
+  private comparator: OrdComparator<T>;
 
   constructor(comparator: OrdComparator<T> = defaultComparator) {
     this.comparator = comparator;
