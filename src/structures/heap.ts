@@ -1,92 +1,134 @@
-type Comparator<T> = (a: T, b: T) => boolean;
+type Ordering = "LT" | "EQ" | "GT";
 
-const defaultBiggerThen: Comparator<unknown> = <T>(a: T, b: T) => a > b;
-const defaultSmallerThen: Comparator<unknown> = <T>(a: T, b: T) => a < b;
+type OrdComparator<T> = (x: T, y: T) => Ordering;
 
-export class MinimumHeap<T> {
-  heap = new Array<T>();
+export { BinHeap, mkHeap, singleton, isEmpty, peek, pop, push, heapify, exists };
 
-  biggerThen: Comparator<T>;
-  smallerThen: Comparator<T>;
+/* Types */
 
-  constructor(
-    biggerThen: Comparator<T> = defaultBiggerThen,
-    smallerThen: Comparator<T> = defaultSmallerThen
-  ) {
-    this.biggerThen = biggerThen;
-    this.smallerThen = smallerThen;
+interface BinHeap<T> {
+  comparator: OrdComparator<T>;
+  data: T[];
+}
+
+/* API Functions */
+
+function isEmpty<T>(heap: BinHeap<T>): boolean {
+  return heap.data.length === 0;
+}
+
+function peek<T>(heap: BinHeap<T>): T | undefined {
+  return heap.data[0];
+}
+
+function pop<T>(heap: BinHeap<T>): T | undefined {
+  if (heap.data.length <= 1) {
+    return heap.data.pop();
   }
 
-  getMin = () => {
-    return this.heap[0];
-  };
+  const retval = heap.data[0];
+  const top = heap.data.pop();
+  if (!top) throw new Error("Something is wrong with pop implementation");
+  heap.data[0] = top;
+  siftDown(heap);
 
-  insert = (item: T) => {
-    this.heap.push(item);
-    if (this.heap.length >= 1) {
-      let currentIndex = this.heap.length - 1;
+  return retval;
+}
 
-      while (
-        currentIndex >= 1 &&
-        this.biggerThen(this.heap[Math.floor(currentIndex / 2)], this.heap[currentIndex])
-      ) {
-        this.swapIndex(Math.floor(currentIndex / 2), currentIndex);
-        currentIndex = Math.floor(currentIndex / 2);
-      }
+function push<T>(item: T, heap: BinHeap<T>) {
+  heap.data.push(item);
+  siftUp(heap);
+}
+
+function heapify<T>(items: T[], comparator: OrdComparator<T>): BinHeap<T> {
+  const heap = { comparator, data: items.slice() };
+
+  // Sift all non-leaf nodes.
+  //
+  // Note 1: we start from the bottom, otherwise a min leaf node
+  //         would never float to the top.
+  //
+  // Note 2: we could have used `siftUp`, but then `heapify` has a worse
+  //         O(n log(2, n)) performance. With `siftDown` it's just O(n).
+  //
+  // See: https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity
+  for (let idx = parentIdx(items.length - 1); idx >= 0; --idx) {
+    siftDown(heap, idx);
+  }
+
+  return heap;
+}
+
+function exists<T>(heap: BinHeap<T>, item: T) {
+  return !!heap.data.find(heapItem => heapItem === item);
+}
+
+/* Private Implementation Functions */
+
+function siftDown<T>(heap: BinHeap<T>, idx = 0) {
+  const { comparator, data } = heap;
+
+  while (true) {
+    const lidx = leftIdx(idx);
+    if (lidx >= data.length) {
+      break;
     }
-  };
 
-  remove = () => {
-    const returnValue = this.getMin();
-    this.heap[0] = this.heap[this.heap.length - 1];
-    this.heap.splice(this.heap.length - 1, 1);
+    const ridx = rightIdx(idx);
+    const childIdx =
+      ridx < data.length ? (comparator(data[lidx], data[ridx]) === "LT" ? lidx : ridx) : lidx;
 
-    let parent = 0;
-    let leftChildIndex = 2 * parent + 1;
-    let rightChildIndex = 2 * parent + 2;
-    let left = leftChildIndex > this.heap.length ? null : this.heap[leftChildIndex];
-    let right = rightChildIndex > this.heap.length ? null : this.heap[rightChildIndex];
-    do {
-      // no children
-      if (!left && !right) {
-        break;
-      }
+    if (comparator(data[childIdx], data[idx]) !== "LT") {
+      break;
+    }
 
-      // 1 child
-      else if (!right && left && this.biggerThen(this.heap[parent], left)) {
-        this.swapIndex(parent, leftChildIndex);
-        parent = leftChildIndex;
-      }
+    swap(childIdx, idx, data);
+    idx = childIdx;
+  }
+}
 
-      // 2 children
-      else if (left && right) {
-        if (this.smallerThen(left, right) && this.biggerThen(this.heap[parent], left)) {
-          this.swapIndex(parent, leftChildIndex);
-          parent = leftChildIndex;
-        } else if (this.biggerThen(left, right) && this.biggerThen(this.heap[parent], right)) {
-          this.swapIndex(parent, rightChildIndex);
-          parent = rightChildIndex;
-        }
-      }
+function siftUp<T>(heap: BinHeap<T>) {
+  const { comparator, data } = heap;
 
-      leftChildIndex = 2 * parent + 1;
-      rightChildIndex = 2 * parent + 2;
-      left = leftChildIndex > this.heap.length ? null : this.heap[leftChildIndex];
-      right = rightChildIndex > this.heap.length ? null : this.heap[rightChildIndex];
-    } while (
-      left &&
-      right &&
-      (this.biggerThen(this.heap[parent], left) || this.biggerThen(this.heap[parent], right))
-    );
+  let idx = heap.data.length - 1;
+  while (idx > 0) {
+    const pidx = parentIdx(idx);
 
-    return returnValue;
-  };
+    if (comparator(data[idx], data[pidx]) !== "LT") {
+      break;
+    }
 
-  size = () => this.heap.length;
+    swap(idx, pidx, data);
+    idx = pidx;
+  }
+}
 
-  exists = (item: T) => !!this.heap.find(heapItem => heapItem === item);
+/* Helpers */
 
-  private swapIndex = (a, b) => {
-    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
-  };
+function parentIdx(x: number) {
+  return (x - 1) >> 1;
+}
+
+function leftIdx(x: number) {
+  return (x << 1) + 1;
+}
+
+function rightIdx(x: number) {
+  return (x << 1) + 2;
+}
+
+function swap<T>(idx1: number, idx2: number, arr: T[]) {
+  const tmp = arr[idx1];
+  arr[idx1] = arr[idx2];
+  arr[idx2] = tmp;
+}
+
+/* Constructors */
+
+function mkHeap<T>(comparator: OrdComparator<T>): BinHeap<T> {
+  return { comparator, data: [] };
+}
+
+function singleton<T>(item: T, comparator: OrdComparator<T>): BinHeap<T> {
+  return { comparator, data: [item] };
 }

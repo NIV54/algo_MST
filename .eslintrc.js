@@ -13,6 +13,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "import/order": ["error", { "newlines-between": "always" }],
     "no-empty": 0,
+    "no-constant-condition": 0,
     // This rules are mostly down to preference
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-unused-vars": 0,
