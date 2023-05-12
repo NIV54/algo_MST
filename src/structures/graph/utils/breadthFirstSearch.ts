@@ -29,7 +29,7 @@ const breadthFirstSearchInner = <T>(
   }
 };
 
-export const breadthFirstSearch = <T>(nodes: GraphNodeMap<T>) => {
+export const breadthFirstSearch = <T>(nodes: GraphNode<T>[]) => {
   const visited: Map<T, boolean> = new Map();
   nodes.forEach(node => {
     if (!visited.has(node.data)) {
