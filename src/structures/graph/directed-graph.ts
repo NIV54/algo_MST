@@ -2,7 +2,7 @@ import type { OrdComparator } from "../common.types";
 
 import { defaultComparator } from "./common";
 import { GraphNode } from "./graph-node";
-import type { GraphNodeMap } from "./graph.types";
+import type { ConntectedNodes, GraphNodeMap } from "./graph.types";
 
 export class DirectedGraph<T> {
   protected nodes: GraphNodeMap<T> = new Map();
@@ -53,13 +53,15 @@ export class DirectedGraph<T> {
     sourceNode.addAdjacent(destinationNode, weight);
   };
 
-  removeEdge = (source: T, destination: T): void => {
+  removeEdge = (source: T, destination: T): ConntectedNodes<T> | null => {
     const sourceNode = this.nodes.get(source);
     const destinationNode = this.nodes.get(destination);
 
     if (sourceNode && destinationNode) {
       sourceNode.removeAdjacent(destination);
+      return { source: sourceNode, destination: destinationNode };
     }
+    return null;
   };
 
   toString() {

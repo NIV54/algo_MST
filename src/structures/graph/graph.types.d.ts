@@ -6,3 +6,8 @@ export interface Edge<T> {
   node: GraphNode<T>;
   weight: number;
 }
+
+export interface ConntectedNodes<T> {
+  source: GraphNode<T>;
+  destination: GraphNode<T>;
+}
