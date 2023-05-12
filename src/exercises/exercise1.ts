@@ -1,6 +1,6 @@
 import { DirectedGraph } from "../structures/graph";
 import { GraphNode } from "../structures/graph/graph-node";
-import { exists, heapify, isEmpty, mkHeap, pop, push } from "../structures/heap";
+import { MinHeap } from "../structures/heap";
 
 type NodeData = any;
 
@@ -10,22 +10,22 @@ export const MSTPrim = (graph: DirectedGraph<NodeData>, source: Node) => {
   const comparator = (a: Node, b: Node): "GT" | "LT" | "EQ" =>
     a.key > b.key ? "GT" : b.key > a.key ? "LT" : "EQ";
 
-  let heap = mkHeap<Node>(comparator);
+  const heap = new MinHeap<Node>({ comparator });
 
   graph.nodes.forEach(node => node.upsertProp("key", Number.MAX_VALUE));
   source.upsertProp("key", 0);
   source.upsertProp("parent", null);
 
-  graph.nodes.forEach(node => push(node, heap));
+  graph.nodes.forEach(node => heap.push(node));
 
-  while (!isEmpty(heap)) {
-    const node = pop(heap);
-    if (!node) continue;
+  while (!heap.isEmpty()) {
+    const node = heap.pop();
+    if (!node) break;
     node.adjacent.forEach(adjacent => {
-      if (exists(heap, adjacent.node) && adjacent.weight < adjacent.node.key) {
+      if (heap.exists(adjacent.node) && adjacent.weight < adjacent.node.key) {
         adjacent.node.upsertProp("parent", node);
         adjacent.node.upsertProp("key", adjacent.weight);
-        heap = heapify(heap.data, comparator);
+        heap.heapify();
       }
     });
   }
