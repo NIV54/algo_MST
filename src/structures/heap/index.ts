@@ -1,5 +1,6 @@
+import type { OrdComparator } from "../common.types";
+
 import { leftIdx, parentIdx, rightIdx, swap } from "./utils";
-import type { OrdComparator } from "./types";
 
 export class MinHeap<T> {
   comparator: OrdComparator<T>;

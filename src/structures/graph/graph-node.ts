@@ -1,14 +1,16 @@
+import type { OrdComparator } from "../common.types";
+
 import { defaultComparator } from "./common";
-import type { Comparator, Edge } from "./types";
+import type { Edge } from "./graph.types";
 
 export class GraphNode<T> {
   data: T;
   adjacent: Edge<T>[];
-  comparator: Comparator<T>;
+  comparator: OrdComparator<T>;
 
   [prop: string]: any;
 
-  constructor(data: T, comparator: Comparator<T> = defaultComparator) {
+  constructor(data: T, comparator: OrdComparator<T> = defaultComparator) {
     this.data = data;
     this.adjacent = [];
     this.comparator = comparator;
@@ -19,7 +21,9 @@ export class GraphNode<T> {
   };
 
   removeAdjacent = (data: T): GraphNode<T> | null => {
-    const index = this.adjacent.findIndex(adjacent => this.comparator(adjacent.node.data, data));
+    const index = this.adjacent.findIndex(
+      adjacent => this.comparator(adjacent.node.data, data) === "EQ"
+    );
 
     if (index > -1) {
       return this.adjacent.splice(index, 1)[0].node;

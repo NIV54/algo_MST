@@ -1,6 +1,6 @@
 import { Queue } from "../../queue";
 import { GraphNode } from "../graph-node";
-import { GraphNodes } from "../types";
+import type { GraphNodes } from "../graph.types";
 
 const breadthFirstSearchInner = <T>(
   node: GraphNode<T> | undefined,

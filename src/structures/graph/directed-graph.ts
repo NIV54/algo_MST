@@ -1,13 +1,14 @@
+import type { OrdComparator } from "../common.types";
+
 import { defaultComparator } from "./common";
 import { GraphNode } from "./graph-node";
-
-import type { Comparator, GraphNodes } from "./types";
+import type { GraphNodes } from "./graph.types";
 
 export class DirectedGraph<T> {
   nodes: GraphNodes<T> = new Map();
-  comparator: Comparator<T>;
+  comparator: OrdComparator<T>;
 
-  constructor(comparator: Comparator<T> = defaultComparator) {
+  constructor(comparator: OrdComparator<T> = defaultComparator) {
     this.comparator = comparator;
   }
 
@@ -39,7 +40,7 @@ export class DirectedGraph<T> {
     return nodeToRemove;
   };
 
-  addEdge = (source: T, destination: T, weight: number = 0): void => {
+  addEdge = (source: T, destination: T, weight = 0): void => {
     const sourceNode = this.addNode(source);
     const destinationNode = this.addNode(destination);
 

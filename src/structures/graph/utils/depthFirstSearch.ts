@@ -1,6 +1,5 @@
 import { GraphNode } from "../graph-node";
-
-import type { GraphNodes } from "../types";
+import type { GraphNodes } from "../graph.types";
 
 const depthFirstSearchInner = <T>(node: GraphNode<T>, visited: Map<T, boolean>): void => {
   if (!node) return;

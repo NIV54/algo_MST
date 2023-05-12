@@ -1,13 +1,14 @@
 import { DirectedGraph } from "../structures/graph";
 import { GraphNode } from "../structures/graph/graph-node";
 import { MinHeap } from "../structures/heap";
+import type { OrdComparator } from "../structures/common.types";
 
 type NodeData = any;
 
 type Node = GraphNode<NodeData>;
 
 export const MSTPrim = (graph: DirectedGraph<NodeData>, source: Node) => {
-  const comparator = (a: Node, b: Node): "GT" | "LT" | "EQ" =>
+  const comparator: OrdComparator<Node> = (a, b) =>
     a.key > b.key ? "GT" : b.key > a.key ? "LT" : "EQ";
 
   const heap = new MinHeap<Node>({ comparator });
