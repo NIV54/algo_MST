@@ -5,12 +5,18 @@ import { GraphNode } from "./graph-node";
 import type { GraphNodeMap } from "./graph.types";
 
 export class DirectedGraph<T> {
-  nodes: GraphNodeMap<T> = new Map();
+  protected nodes: GraphNodeMap<T> = new Map();
   private comparator: OrdComparator<T>;
 
   constructor(comparator: OrdComparator<T> = defaultComparator) {
     this.comparator = comparator;
   }
+
+  getNodes = (): GraphNode<T>[] => {
+    const nodes: GraphNode<T>[] = [];
+    this.nodes.forEach(node => nodes.push(node));
+    return nodes;
+  };
 
   /**
    * adds node *if not exists*

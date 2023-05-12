@@ -13,11 +13,11 @@ export const MSTPrim = (graph: DirectedGraph<NodeData>, source: Node) => {
 
   const heap = new MinHeap<Node>({ comparator });
 
-  graph.nodes.forEach(node => node.upsertProp("key", Number.MAX_VALUE));
+  graph.getNodes().forEach(node => node.upsertProp("key", Number.MAX_VALUE));
   source.upsertProp("key", 0);
   source.upsertProp("parent", null);
 
-  graph.nodes.forEach(node => heap.push(node));
+  graph.getNodes().forEach(node => heap.push(node));
 
   while (!heap.isEmpty()) {
     const node = heap.pop();
@@ -33,4 +33,4 @@ export const MSTPrim = (graph: DirectedGraph<NodeData>, source: Node) => {
 };
 
 export const printMST = (graph: DirectedGraph<NodeData>) =>
-  graph.nodes.forEach(node => console.log(node.data, node.parent?.data || "null"));
+  graph.getNodes().forEach(node => console.log(node.data, node.parent?.data || "null"));
